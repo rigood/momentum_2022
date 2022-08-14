@@ -15,12 +15,14 @@ function handleCheck(event) {
   if (event.target.id == "unchecked") {
     event.target.setAttribute("class", "fi fi-sr-checkbox");
     lineText.style.textDecoration = "line-through";
-    lineText.style.color = "lightgray";
+    lineText.style.color = "#888888";
+    event.target.style.color = "#888888";
     event.target.id = "checked";
   } else {
-    event.target.setAttribute("class", "fi fi-br-check");
+    event.target.setAttribute("class", "fi fi-sr-square");
     lineText.style.textDecoration = "none";
-    lineText.style.color = "black";
+    lineText.style.color = "#333333";
+    event.target.style.color = "#333333";
     event.target.id = "unchecked";
   }
 }
@@ -37,12 +39,12 @@ function paintToDo(newToDo) {
   li.id = newToDo.id;
 
   const checkBtn = document.createElement("i");
-  checkBtn.setAttribute("class", "fi fi-br-check");
+  checkBtn.setAttribute("class", "fi fi-sr-square");
   checkBtn.setAttribute("id", "unchecked");
   const todoSpan = document.createElement("span");
   todoSpan.innerText = newToDo.text;
   const deleteBtn = document.createElement("i");
-  deleteBtn.setAttribute("class", "fi fi-sr-trash");
+  deleteBtn.setAttribute("class", "fi fi-rr-cross-small");
 
   checkBtn.addEventListener("click", handleCheck);
   deleteBtn.addEventListener("click", deleteToDo);

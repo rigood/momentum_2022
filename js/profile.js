@@ -12,7 +12,7 @@ const IMAGE_KEY = "image";
 
 const savedNickname = localStorage.getItem(NICKNAME_KEY);
 const savedImage = localStorage.getItem(IMAGE_KEY);
-const defaultImageURL = "img/profile.jpg";
+const defaultImageURL = "img/profile.png";
 
 if (savedImage === null) {
   displayImage(defaultImageURL);

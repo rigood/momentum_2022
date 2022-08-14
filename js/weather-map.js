@@ -67,7 +67,6 @@ function handleKeyword(event) {
   /* 키워드로 장소 검색 */
   // keywordSearch(keyword, callback, options)
   ps.keywordSearch(input.value, placeSearchCB);
-  input.value = "";
 }
 
 searchMapForm.addEventListener("submit", handleKeyword);

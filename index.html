@@ -7,6 +7,10 @@
     <title>rigood</title>
     <link rel="stylesheet" href="style.css" />
     <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
       rel="stylesheet"
       href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css"
     />
@@ -30,7 +34,7 @@
         <!--메인 내부: 프로필-->
         <section class="profile">
           <div class="profile-thumbnail">
-            <img id="profile-photo" src="img/profile.jpg" />
+            <img id="profile-photo" src="img/profile.png" />
             <input id="profile-file" type="file" accept="image/*" />
             <label id="profile-edit" for="profile-file">
               <i class="fa-solid fa-pen"></i>
@@ -42,7 +46,7 @@
               type="text"
               required
               maxlength="10"
-              placeholder="Nickname :)"
+              placeholder="닉네임 입력"
             />
           </form>
           <h1 id="nickname-display" class="hidden"></h1>
@@ -51,22 +55,25 @@
         <section class="searchmap">
           <div id="map"></div>
           <form id="searchmap-form">
-            <input type="text" placeholder="Ex) 강남역 맛집" required />
+            <input type="text" placeholder="지도 검색 >> OO역 맛집" required />
           </form>
         </section>
         <!--메인 내부 : 구글 검색-->
         <section class="google">
           <form id="google-form">
-            <input type="text" placeholder="Google !" />
+            <input type="text" placeholder="Google 검색" />
           </form>
         </section>
         <!-- 메인 내부 : 유튜브-->
         <section class="youtube">
-          <form id="search-form">
-            <input type="text" placeholder="Ex) 귀여운 노래" required />
-            <input type="submit" value="🔍" />
-          </form>
-          <div id="player"></div>
+          <div class="youtube-box">
+            <iframe
+              src="https://www.youtube.com/embed/fhkQcCmkt6s"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
         </section>
         <!--메인 내부 : 투두리스트-->
         <section class="todo">
@@ -74,16 +81,18 @@
           <form id="todo-form">
             <input
               type="text"
-              placeholder="Write your to-do :)"
-              maxlength="25"
+              placeholder="(+) 오늘의 할일 입력"
+              maxlength="10"
               required
             />
           </form>
         </section>
       </div>
       <!--wrap 오른쪽 : 배경화면 변경 버튼-->
-      <button id="bg-colorBtn" class="background"><span>COLOR</span></button>
-      <button id="bg-cloudBtn" class="background"><span>CLOUD</span></button>
+      <button id="bg-colorBtn" class="background">
+        <span>그라디언트</span>
+      </button>
+      <button id="bg-cloudBtn" class="background"><span>구름배경</span></button>
     </main>
     <!--페이지 오른쪽 하단 : 포춘쿠키-->
     <button id="fortune">
@@ -92,7 +101,7 @@
     <div id="openMsg">포춘쿠키 열어보기</div>
     <!--페이지 왼쪽 상단 나가기 버튼-->
     <button id="exit">
-      <img src="img/exit2.png" />
+      <img src="img/exit.png" />
     </button>
     <!--스크립트-->
     <script
@@ -103,8 +112,6 @@
       src="https://kit.fontawesome.com/13650dff62.js"
       crossorigin="anonymous"
     ></script>
-    <!-- <script src="https://www.youtube.com/iframe_api"></script> -->
-    <!-- <script src="js/youtube.js"></script> -->
     <script src="js/exit.js"></script>
     <script src="js/google.js"></script>
     <script src="js/profile.js"></script>

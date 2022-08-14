@@ -1,12 +1,5 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
 @font-face {
-  font-family: "RIDIBatang";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff")
-    format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
   font-family: "GmarketSansMedium";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
     format("woff");
@@ -16,6 +9,13 @@
 @font-face {
   font-family: "establishRetrosansOTF";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/establishRetrosansOTF.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "DungGeunMo";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff")
     format("woff");
   font-weight: normal;
   font-style: normal;
@@ -37,7 +37,32 @@ body {
   align-items: center;
   background-image: url("img/bg_cloud.jpg");
   background-size: cover;
-  font-family: "establishRetrosansOTF";
+  font-family: "GmarketSansMedium";
+}
+
+input {
+  font-family: "GmarketSansMedium";
+  font-size: 15px;
+  text-align: center;
+}
+
+input:focus {
+  background-color: white !important;
+  border: none;
+  outline: 7px solid gold !important;
+}
+input:focus::placeholder {
+  color: transparent;
+}
+input::placeholder,
+input::-webkit-input-placeholder {
+  font-family: "GmarketSansMedium";
+  font-size: 15px;
+  text-align: center;
+}
+
+button {
+  font-family: "GmarketSansMedium";
 }
 
 main {
@@ -60,8 +85,9 @@ main {
     justify-content: space-between;
     position: absolute;
     top: -35px;
-    padding: 0px 30px;
-    font-size: 20px;
+    padding: 0px 25px;
+    font-family: "DungGeunMo";
+    font-size: 25px;
     div {
       display: flex;
       align-items: flex-end;
@@ -76,7 +102,7 @@ main {
     width: 97%;
     height: 95%;
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 0.9fr 2fr 1fr;
     grid-template-rows: 3.8fr 6.2fr;
 
     // 프로필 (사진, 닉네임)
@@ -103,7 +129,7 @@ main {
         i {
           position: absolute;
           bottom: 0;
-          right: 0px;
+          right: 0;
           padding: 10px;
           border-radius: 50%;
           background-color: rgba(255, 255, 255, 0.5);
@@ -118,14 +144,15 @@ main {
           padding: 10px;
           padding-bottom: 5px;
           border: none;
-          border-bottom: 1px solid black;
-          background: transparent;
+          background-color: rgba(255, 255, 255, 0.3);
+          border-radius: 20px;
         }
         input#nickname-input:focus {
           outline: none;
         }
         ::placeholder {
-          font-family: "establishRetrosansOTF";
+          font-family: "GmarketSansMedium";
+
           text-align: center;
         }
       }
@@ -145,23 +172,24 @@ main {
         width: 250px;
         height: 250px;
         border-radius: 20px;
-        background-color: pink;
+        background-color: rgba(255, 255, 255, 0.5);
       }
       #searchmap-form {
-        margin-top: 10px;
+        margin-top: 20px;
         input[type="text"] {
-          width: 250px;
+          width: 220px;
           padding: 10px;
           padding-bottom: 5px;
           border: none;
-          border-bottom: 1px solid black;
-          background: transparent;
+          background-color: rgba(255, 255, 255, 0.3);
+          border-radius: 20px;
         }
         input[type="text"]:focus {
           outline: none;
         }
         ::placeholder {
-          font-family: "establishRetrosansOTF";
+          font-family: "GmarketSansMedium";
+
           text-align: center;
         }
       }
@@ -182,16 +210,17 @@ main {
           width: 100%;
           height: 100%;
           padding: 30px;
-          border: 1px solid black;
+          border: none;
           border-radius: 20px;
-          background: transparent;
+          background-color: rgba(255, 255, 255, 0.3);
           font-size: 20px;
         }
         input[type="text"]:focus {
           outline: none;
         }
         ::placeholder {
-          font-family: "establishRetrosansOTF";
+          font-family: "GmarketSansMedium";
+
           font-size: 20px;
           text-align: center;
         }
@@ -199,35 +228,27 @@ main {
     }
     section.youtube {
       width: 100%;
-      height: 100%;
+      height: 85%;
       grid-column: 2 / 3;
       grid-row: 2 / -1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      #search-form {
-        margin-bottom: 30px;
-        input[type="text"] {
-          width: 250px;
-          padding: 10px;
-          padding-bottom: 5px;
-          border: none;
-          border-bottom: 1px solid black;
-          background: transparent;
-        }
-        input[type="text"]:focus {
-          outline: none;
-        }
-        ::placeholder {
-          font-family: "establishRetrosansOTF";
-          text-align: center;
-        }
+      .youtube-box {
+        position: relative;
+        width: 80%;
+        padding-bottom: 56.25%;
+        height: 0;
       }
-      div#player {
-        width: 500px;
-        height: 281px;
-        background-color: pink;
+      .youtube-box iframe,
+      .youtube-box object,
+      .youtube-box embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
       }
     }
     section.todo {
@@ -246,33 +267,37 @@ main {
         input[type="text"] {
           width: 100%;
           height: 100%;
-          border: 1px solid black;
+          border: none;
           border-radius: 20px;
-          background: transparent;
-          font-size: 20px;
+          background-color: rgba(255, 255, 255, 0.3);
+          font-size: 15px;
         }
         input[type="text"]:focus {
           outline: none;
         }
         ::placeholder {
-          font-family: "establishRetrosansOTF";
-          font-size: 20px;
+          font-family: "GmarketSansMedium";
+          font-size: 15px;
           text-align: center;
         }
       }
       ul#todo-list {
         width: 90%;
         height: 80%;
+        padding: 7% 5%;
         overflow-y: auto;
-        border: 1px solid black;
+        border-radius: 20px;
+        background-color: rgba(255, 255, 255, 0.3);
         li {
           height: 50px;
           display: flex;
           justify-content: space-between;
           margin-bottom: 15px;
-          padding: 10px;
+          padding: 18px;
           border-radius: 20px;
           background-color: rgba(255, 255, 255, 0.5);
+          font-size: 14px;
+          cursor: pointer;
         }
       }
       ::-webkit-scrollbar {
@@ -285,12 +310,14 @@ main {
   .background {
     position: absolute;
     top: 0px;
-    right: -35px;
+    right: -38px;
     padding: 10px;
     border: none;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     background-color: white;
+    letter-spacing: 5px;
+    z-index: -1;
     cursor: pointer;
     span {
       writing-mode: vertical-lr;
@@ -298,12 +325,9 @@ main {
     }
   }
   #bg-cloudBtn {
-    top: 98px;
+    top: 117.66px;
     background-color: #1c7ab7;
     color: white;
-  }
-  #d-dayBtn {
-    top: 196px;
   }
 }
 
