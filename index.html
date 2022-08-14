@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rigood</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css"
+    />
+    <link rel="shortcut icon" href="img/icon_cloud.png" type="image/x-icon" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div id="clock"></div>
+        <div id="weather"></div>
+      </header>
+      <div class="wrap">
+        <!--메인 내부: 프로필-->
+        <section class="profile">
+          <div class="profile-thumbnail">
+            <img id="profile-photo" src="img/profile.jpg" />
+            <input id="profile-file" type="file" accept="image/*" />
+            <label id="profile-edit" for="profile-file">
+              <i class="fa-solid fa-pen"></i>
+            </label>
+          </div>
+          <form id="nickname-form" class="hidden">
+            <input
+              id="nickname-input"
+              type="text"
+              required
+              maxlength="10"
+              placeholder="Nickname :)"
+            />
+          </form>
+          <h1 id="nickname-display" class="hidden"></h1>
+        </section>
+        <!--메인 내부 : 지도 및 키워드 검색-->
+        <section class="searchmap">
+          <div id="map"></div>
+          <form id="searchmap-form">
+            <input type="text" placeholder="Ex) 강남역 맛집" required />
+          </form>
+        </section>
+        <!--메인 내부 : 구글 검색-->
+        <section class="google">
+          <form id="google-form">
+            <input type="text" placeholder="Google !" />
+          </form>
+        </section>
+        <!-- 메인 내부 : 유튜브-->
+        <section class="youtube">
+          <form id="search-form">
+            <input type="text" placeholder="Ex) 귀여운 노래" required />
+            <input type="submit" value="🔍" />
+          </form>
+          <div id="player"></div>
+        </section>
+        <!--메인 내부 : 투두리스트-->
+        <section class="todo">
+          <ul id="todo-list"></ul>
+          <form id="todo-form">
+            <input
+              type="text"
+              placeholder="Write your to-do :)"
+              maxlength="25"
+              required
+            />
+          </form>
+        </section>
+      </div>
+      <!--wrap 오른쪽 : 배경화면 변경 버튼-->
+      <button id="bg-colorBtn" class="background"><span>COLOR</span></button>
+      <button id="bg-cloudBtn" class="background"><span>CLOUD</span></button>
+    </main>
+    <!--페이지 오른쪽 하단 : 포춘쿠키-->
+    <button id="fortune">
+      <img src="img/fortune.png" />
+    </button>
+    <div id="openMsg">포춘쿠키 열어보기</div>
+    <!--페이지 왼쪽 상단 나가기 버튼-->
+    <button id="exit">
+      <img src="img/exit2.png" />
+    </button>
+    <!--스크립트-->
+    <script
+      type="text/javascript"
+      src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=5519e756431b8ae770b8d24e52a9c215&libraries=services"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/13650dff62.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- <script src="https://www.youtube.com/iframe_api"></script> -->
+    <!-- <script src="js/youtube.js"></script> -->
+    <script src="js/exit.js"></script>
+    <script src="js/google.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/fortune.js"></script>
+    <script src="js/clock.js"></script>
+    <script src="js/weather-map.js"></script>
+    <script src="js/todo.js"></script>
+  </body>
+</html>
