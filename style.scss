@@ -31,7 +31,9 @@
 
 body {
   width: 100%;
+  min-width: 1920px;
   height: 100vh;
+  min-height: 937px;
   display: flex;
   justify-content: center;
   align-items: center;
