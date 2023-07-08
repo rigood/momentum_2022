@@ -1,81 +1,156 @@
+const TODOS_KEY = "todos";
+const savedToDos = localStorage.getItem(TODOS_KEY);
+
+let toDos = [];
+let draggingToDoId;
+let afterToDoId;
+
 const toDoForm = document.getElementById("todo-form");
 const toDoInput = toDoForm.querySelector("input");
 const toDoList = document.getElementById("todo-list");
 
-let toDos = [];
-const TODOS_KEY = "todos";
+function getDragAfterElement(container, y) {
+  const draggableElements = [
+    ...container.querySelectorAll(".draggable:not(.dragging)"),
+  ];
+
+  return draggableElements.reduce(
+    (closestElement, element) => {
+      const elementRect = element.getBoundingClientRect();
+      const offset = y - elementRect.top - elementRect.height / 2;
+
+      if (offset < 0 && offset > closestElement.offset) {
+        return { offset, element };
+      } else {
+        return closestElement;
+      }
+    },
+    { offset: Number.NEGATIVE_INFINITY }
+  ).element;
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+
+  const draggingToDo = toDos.find((toDo) => toDo.id === draggingToDoId);
+
+  const draggingToDoIndex = toDos.findIndex(
+    (toDo) => toDo.id === draggingToDoId
+  );
+
+  toDos.splice(draggingToDoIndex, 1);
+
+  const afterToDoIndex = afterToDoId
+    ? toDos.findIndex((toDo) => toDo.id === afterToDoId)
+    : toDos.length;
+
+  toDos.splice(afterToDoIndex, 0, draggingToDo);
+
+  saveToDos();
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  const draggingElement = document.querySelector(".dragging");
+  const afterElement = getDragAfterElement(toDoList, e.clientY);
+
+  toDoList.insertBefore(draggingElement, afterElement || null);
+
+  draggingToDoId = draggingElement.id;
+  afterToDoId = afterElement?.id;
+}
+
+function createTodo(e) {
+  e.preventDefault();
+
+  const newToDoObj = {
+    id: String(Date.now()),
+    text: toDoInput.value,
+    checked: false,
+  };
+
+  paintToDo(newToDoObj);
+
+  toDos.push(newToDoObj);
+  saveToDos();
+
+  toDoInput.value = "";
+}
 
 function saveToDos() {
   localStorage.setItem(TODOS_KEY, JSON.stringify(toDos));
 }
 
-function handleCheck(event) {
-  event.preventDefault();
-  const lineText = event.target.parentElement.querySelector("span");
-  if (event.target.id == "unchecked") {
-    event.target.setAttribute("class", "fi fi-sr-checkbox");
-    lineText.style.textDecoration = "line-through";
-    lineText.style.color = "#888888";
-    event.target.style.color = "#888888";
-    event.target.id = "checked";
-  } else {
-    event.target.setAttribute("class", "fi fi-sr-square");
-    lineText.style.textDecoration = "none";
-    lineText.style.color = "#333333";
-    event.target.style.color = "#333333";
-    event.target.id = "unchecked";
-  }
+function deleteToDo(e) {
+  const li = e.target.parentElement;
+  li.remove();
+
+  toDos = toDos.filter((toDo) => toDo.id !== li.id);
+  saveToDos();
 }
 
-function deleteToDo(event) {
-  const li = event.target.parentElement;
-  li.remove();
-  toDos = toDos.filter((toDo) => toDo.id !== parseInt(li.id));
+function toggleCheck(e) {
+  e.preventDefault();
+
+  const checkBtn = e.target;
+  const li = e.target.parentElement;
+
+  if (li.classList.contains("unchecked")) {
+    li.classList.remove("unchecked");
+    li.classList.add("checked");
+    checkBtn.setAttribute("class", "check-btn far fa-square-check");
+  } else {
+    li.classList.remove("checked");
+    li.classList.add("unchecked");
+    checkBtn.setAttribute("class", "check-btn far fa-square");
+  }
+
+  toDos = toDos.map((toDo) =>
+    toDo.id === li.id ? { ...toDo, checked: !toDo.checked } : toDo
+  );
+
   saveToDos();
 }
 
 function paintToDo(newToDo) {
   const li = document.createElement("li");
   li.id = newToDo.id;
+  li.className = "draggable";
+  li.classList.add(newToDo.checked ? "checked" : "unchecked");
+  li.draggable = true;
+  li.addEventListener("dragstart", () => li.classList.add("dragging"));
+  li.addEventListener("dragend", () => li.classList.remove("dragging"));
 
   const checkBtn = document.createElement("i");
-  checkBtn.setAttribute("class", "fi fi-sr-square");
-  checkBtn.setAttribute("id", "unchecked");
-  const todoSpan = document.createElement("span");
-  todoSpan.innerText = newToDo.text;
-  const deleteBtn = document.createElement("i");
-  deleteBtn.setAttribute("class", "fi fi-rr-cross-small");
+  checkBtn.setAttribute(
+    "class",
+    newToDo.checked
+      ? "check-btn far fa-square-check"
+      : "check-btn far fa-square"
+  );
 
-  checkBtn.addEventListener("click", handleCheck);
+  const todoText = document.createElement("div");
+  todoText.className = "todo-text";
+  todoText.innerText = newToDo.text;
+
+  const deleteBtn = document.createElement("i");
+  deleteBtn.setAttribute("class", "fas fa-trash");
+
+  checkBtn.addEventListener("click", toggleCheck);
   deleteBtn.addEventListener("click", deleteToDo);
 
-  li.appendChild(checkBtn);
-  li.appendChild(todoSpan);
-  li.appendChild(deleteBtn);
-  toDoList.appendChild(li);
+  li.append(checkBtn, todoText, deleteBtn);
 
+  toDoList.appendChild(li);
   toDoList.scrollTop = toDoList.scrollHeight;
 }
 
-function handleToDoSubmit(event) {
-  event.preventDefault();
-  const newToDo = toDoInput.value;
-  toDoInput.value = "";
-  const newToDoObj = {
-    text: newToDo,
-    id: Date.now(),
-  };
-  toDos.push(newToDoObj);
-  paintToDo(newToDoObj);
-  saveToDos();
-}
+toDoList.addEventListener("drop", handleDrop);
+toDoList.addEventListener("dragover", handleDragOver);
+toDoForm.addEventListener("submit", createTodo);
 
-toDoForm.addEventListener("submit", handleToDoSubmit);
-
-const savedToDos = localStorage.getItem(TODOS_KEY);
-
-if (savedToDos !== null) {
+if (savedToDos) {
   const parsedToDos = JSON.parse(savedToDos);
   toDos = parsedToDos;
-  parsedToDos.forEach(paintToDo);
+  toDos.forEach(paintToDo);
 }

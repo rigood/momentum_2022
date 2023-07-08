@@ -1,110 +1,204 @@
-/* geolocation 으로 현재 위치 찾기 */
+// 현재 위치 찾기
 navigator.geolocation.getCurrentPosition(onGeoOk, onGeoError);
-const API_KEY = "f3159283908f8d33a66e556ba1d370de";
 
-/* 지도 준비 */
-const mapContainer = document.querySelector("#map");
-const mapOption = {
-  center: new kakao.maps.LatLng(37.566826, 126.9786567),
-  level: 6,
-};
+// 지도 관련 변수
+let map;
+let markers = [];
+let customOverlays = [];
+const mapContainer = document.getElementById("kakao-map");
 
-/* 지도 생성 */
-const map = new kakao.maps.Map(mapContainer, mapOption);
+let defaultPosition;
 let currentPosition;
 
-/* 지도 좌표 표시 함수 */
-function displayMap(currentPosition) {
-  const marker = new kakao.maps.Marker({
-    map: map,
-    position: currentPosition,
+const LAT_SEOUL_NAMSAN_TOWER = 37.551216399999916;
+const LON_SEOUL_NAMSAN_TOWER = 126.98406449999995;
+
+// 지도 생성
+function displayMap(position) {
+  map = new kakao.maps.Map(mapContainer, {
+    center: position,
+    level: 6,
   });
-  map.setCenter(currentPosition);
+
+  addMarker(position);
+}
+
+// 지도에 마커 표시
+function addMarker(position) {
+  const marker = new kakao.maps.Marker({ map, position });
   marker.setMap(map);
+  markers.push(marker);
 }
 
-/* geolocation 연결 여부에 따른 함수 실행 */
-function onGeoOk(position) {
-  const lat = position.coords.latitude;
-  const lon = position.coords.longitude;
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&lang=kr&units=metric`;
-  fetch(url).then((response) =>
-    response.json().then((data) => {
-      // 오른쪽 상단 날씨 표시
-      const weather = document.querySelector("#weather");
-      const city = data.name;
-      const temp = Math.round(data.main.temp);
-      const weatherIconNum = data.weather[0].icon;
-      const weatherIcon = document.createElement("img");
-      weatherIcon.src = `./img/icons/${weatherIconNum}.png`;
-      weather.append(city, weatherIcon, `${temp}°C`);
-      // 왼쪽 하단 지도 표시 (현재 위치)
-      currentPosition = new kakao.maps.LatLng(lat, lon);
-      displayMap(currentPosition);
-    })
-  );
+// 지도 초기화
+function resetMap() {
+  markers.forEach((marker) => {
+    marker.setMap(null);
+  });
+
+  customOverlays.forEach((customOverlay) => {
+    customOverlay.setMap(null);
+  });
+
+  markers = [];
+  customOverlays = [];
 }
 
-function onGeoError() {
-  alert("날씨 정보를 가져올 수 없어요 ㅠㅠ");
-  // 지도 표시 (서울 남산타워)
-  currentPosition = new kakao.maps.LatLng(
-    37.551216399999916,
-    126.98406449999995
-  );
-  displayMap(currentPosition);
-}
-
-/* 장소 검색 개체 생성 */
+// 장소 검색 개체 생성
 const ps = new kakao.maps.services.Places();
 
-/* 검색 키워드 가져오기 */
-const searchMapForm = document.querySelector("#searchmap-form");
+// 장소 검색
+const searchMapForm = document.getElementById("map-search-form");
+const searchMapInput = searchMapForm.querySelector("input");
 
-function handleKeyword(event) {
-  event.preventDefault();
-  const input = searchMapForm.querySelector("input");
-  /* 키워드로 장소 검색 */
-  // keywordSearch(keyword, callback, options)
-  ps.keywordSearch(input.value, placeSearchCB);
+function handleKeyword(e) {
+  e.preventDefault();
+
+  const keyword = searchMapInput.value;
+
+  if (keyword === "") {
+    resetMap();
+    displayMap(defaultPosition);
+  }
+
+  ps.keywordSearch(keyword, handleKeywordSearch);
 }
 
 searchMapForm.addEventListener("submit", handleKeyword);
 
-/* 키워드 검색 완료 시 호출되는 콜백함수 */
-function placeSearchCB(data, status, pagination) {
-  // 검색결과 있음
+// 장소 검색 콜백함수
+function handleKeywordSearch(data, status, pagination) {
+  // 검색 결과 있을 때
   if (status === kakao.maps.services.Status.OK) {
-    const bounds = new kakao.maps.LatLngBounds(); // LatLngBounds(sw, ne): 남서쪽 좌표, 북동쪽 좌표를 통해 사각영역 객체 생성
-    for (i = 0; i < data.length; i++) {
-      placeSearchDisplay(data[i]);
-      bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x)); // 주어진 좌표를 포함하도록 영역 확장
-    }
-    map.setLevel(4);
-    map.setBounds(bounds); // 검색된 장소 위치를 기준으로 지도 범위 재설정
+    resetMap();
+
+    const bounds = new kakao.maps.LatLngBounds();
+
+    data.forEach((place) => {
+      displayPlaceSearch(place);
+      bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+    });
+
+    map.setBounds(bounds);
+  }
+
+  // 검색 결과 없을 때
+  if (status === kakao.maps.services.Status.ZERO_RESULT) {
+    alert("검색 결과가 존재하지 않습니다.");
+    searchMapInput.value = "";
+
+    resetMap();
+    displayMap(defaultPosition);
+  }
+
+  // 오류 발생 시
+  if (status === kakao.maps.services.Status.ERROR) {
+    alert("오류가 발생했습니다");
   }
 }
 
-/* 지도에 마커, 인포윈도우, 확대축소 컨트롤 표시 */
-function placeSearchDisplay(place) {
+// 지도에 마커, 커스텀 오버레이 표시
+function displayPlaceSearch(place) {
+  const position = new kakao.maps.LatLng(place.y, place.x);
+
   // 마커 생성
   const marker = new kakao.maps.Marker({
-    map: map,
-    position: new kakao.maps.LatLng(place.y, place.x),
+    map,
+    position,
   });
+  markers.push(marker);
 
-  // 인포윈도우 생성
-  const infowindow = new kakao.maps.InfoWindow({
+  // 커스텀 오버레이 생성
+  const customOverlay = new kakao.maps.CustomOverlay({
+    position,
+    xAnchor: 0,
+    yAnchor: 0,
     zIndex: 1,
-    removable: true,
+    clickable: true,
   });
 
-  // 마커에 클릭이벤트 등록
+  let isCustomOverlayOpen = false;
+
+  const container = document.createElement("div");
+  container.className = "custom-overlay";
+
+  const textContainer = document.createElement("div");
+  textContainer.className = "text-container";
+
+  const placeName = document.createElement("span");
+  placeName.className = "place-name";
+  placeName.innerText = place.place_name;
+
+  const goToKakaoMap = document.createElement("a");
+  goToKakaoMap.className = "goto-kakaomap";
+  goToKakaoMap.href = `https://map.kakao.com/link/map/${place.id}`;
+  goToKakaoMap.target = "_blank";
+  goToKakaoMap.innerText = "자세히 보기";
+
+  textContainer.append(placeName, goToKakaoMap);
+
+  const closeBtn = document.createElement("button");
+  closeBtn.innerText = "✖";
+  closeBtn.title = "닫기";
+  closeBtn.onclick = () => {
+    customOverlay.setMap(null);
+    isCustomOverlayOpen = false;
+  };
+
+  container.append(textContainer, closeBtn);
+
+  // 마커 클릭 시 커스텀 오버레이 열고 닫기
   kakao.maps.event.addListener(marker, "click", function () {
-    // 마커 클릭 시 인포윈도우에 장소명 표출
-    infowindow.setContent(
-      '<div style="padding:10px;font-size:12px;">' + place.place_name + "</div>"
-    );
-    infowindow.open(map, marker);
+    if (isCustomOverlayOpen) {
+      customOverlay.setMap(null);
+      isCustomOverlayOpen = false;
+    } else {
+      customOverlay.setMap(map);
+      isCustomOverlayOpen = true;
+    }
   });
+
+  customOverlay.setContent(container);
+
+  customOverlays.push(customOverlay);
+}
+
+function onGeoError() {
+  alert("날씨 정보를 가져올 수 없어요 😓");
+
+  // 지도에 서울 남산타워 위치 표시
+  defaultPosition = new kakao.maps.LatLng(
+    LAT_SEOUL_NAMSAN_TOWER,
+    LON_SEOUL_NAMSAN_TOWER
+  );
+  displayMap(defaultPosition);
+}
+
+function onGeoOk(position) {
+  const myLat = position.coords.latitude;
+  const myLon = position.coords.longitude;
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${myLat}&lon=${myLon}&appid=f3159283908f8d33a66e556ba1d370de&lang=kr&units=metric`;
+
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      // 오른쪽 상단 날씨 표시
+      const weather = document.getElementById("weather");
+
+      const city = document.createElement("span");
+      city.innerText = data.name;
+
+      const weatherIcon = document.createElement("img");
+      weatherIcon.src = `./img/icons/${data.weather[0].icon}.png`;
+
+      const temp = document.createElement("span");
+      temp.innerText = Math.round(data.main.temp) + "°C";
+
+      weather.append(city, weatherIcon, temp);
+
+      // 지도에 내 위치 표시
+      defaultPosition = new kakao.maps.LatLng(myLat, myLon);
+      displayMap(defaultPosition);
+    });
 }

@@ -1,124 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>rigood</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="style.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css"
-    />
-    <link rel="shortcut icon" href="img/icon_cloud.png" type="image/x-icon" />
+    <title>Momentum</title>
   </head>
   <body>
-    <main>
+    <div class="app">
       <header>
+        <!-- 시계 -->
         <div id="clock"></div>
+        <!-- 날씨 -->
         <div id="weather"></div>
       </header>
-      <div class="wrap">
-        <!--메인 내부: 프로필-->
-        <section class="profile">
-          <div class="profile-thumbnail">
-            <img id="profile-photo" src="img/profile.png" />
-            <input id="profile-file" type="file" accept="image/*" />
-            <label id="profile-edit" for="profile-file">
-              <i class="fa-solid fa-pen"></i>
+      <main>
+        <!-- 프로필 -->
+        <div class="grid profile">
+          <div class="profile-photo">
+            <img
+              id="profile-photo-thumbnail"
+              src="img/default-profile.png"
+              alt="프로필 사진"
+            />
+            <label for="profile-photo-input">
+              <input
+                id="profile-photo-input"
+                type="file"
+                accept="image/*"
+                hidden
+              />
+              <i class="fa-solid fa-camera"></i>
             </label>
           </div>
-          <form id="nickname-form" class="hidden">
+          <form id="profile-nickname-form">
             <input
-              id="nickname-input"
               type="text"
               required
               maxlength="10"
               placeholder="닉네임 입력"
             />
           </form>
-          <h1 id="nickname-display" class="hidden"></h1>
-        </section>
-        <!--메인 내부 : 지도 및 키워드 검색-->
-        <section class="searchmap">
-          <div id="map"></div>
-          <form id="searchmap-form">
-            <input type="text" placeholder="지도 검색 >> OO역 맛집" required />
+          <div id="profile-nickname-display" class="hidden"></div>
+        </div>
+        <!-- 지도 -->
+        <div class="grid map">
+          <div id="kakao-map"></div>
+          <form id="map-search-form">
+            <input type="text" placeholder="지도 검색 >> OO역 맛집" />
           </form>
-        </section>
-        <!--메인 내부 : 구글 검색-->
-        <section class="google">
-          <form id="google-form">
+        </div>
+        <!-- 검색 -->
+        <div class="grid search">
+          <form class="search-form" id="google-search-form">
             <input type="text" placeholder="Google 검색" />
           </form>
-        </section>
-        <!-- 메인 내부 : 유튜브-->
-        <section class="youtube">
-          <div class="youtube-box">
-            <iframe
-              src="https://www.youtube.com/embed/fhkQcCmkt6s"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
+          <form class="search-form" id="naver-search-form">
+            <input type="text" placeholder="Naver 검색" />
+          </form>
+        </div>
+        <!-- 유튜브 -->
+        <div class="grid youtube">
+          <div class="youtube-container">
+            <div id="youtube-iframe-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/fhkQcCmkt6s"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <form id="youtube-url-form">
+              <input type="text" placeholder="유튜브 영상 주소 입력" required />
+            </form>
           </div>
-        </section>
-        <!--메인 내부 : 투두리스트-->
-        <section class="todo">
+        </div>
+        <!-- 투두리스트 -->
+        <div class="grid todo">
           <ul id="todo-list"></ul>
           <form id="todo-form">
-            <input
-              type="text"
-              placeholder="(+) 오늘의 할일 입력"
-              maxlength="10"
-              required
-            />
+            <input type="text" required placeholder="(+) 오늘의 할일 입력" />
           </form>
-        </section>
-      </div>
-      <!--wrap 오른쪽 : 배경화면 변경 버튼-->
-      <button id="bg-colorBtn" class="background">
-        <span>그라디언트</span>
-      </button>
-      <button id="bg-cloudBtn" class="background"><span>구름배경</span></button>
-    </main>
-    <!--페이지 오른쪽 하단 : 포춘쿠키-->
-    <button id="fortune">
-      <img src="img/fortune.png" />
+        </div>
+        <!--메인 오른쪽 상단 배경화면 변경 버튼-->
+        <nav class="bg-btns">
+          <button type="button" id="cloud-bg-btn" class="bg-btn">
+            <span>구름배경</span>
+          </button>
+          <button type="button" id="random-bg-btn" class="bg-btn">
+            <span>랜덤배경</span>
+          </button>
+        </nav>
+      </main>
+    </div>
+    <!-- 페이지 오른쪽 하단 포춘쿠키 -->
+    <button type="button" id="fortune-cookie">
+      <img src="img/fortune-cookie.png" />
     </button>
-    <div id="openMsg">포춘쿠키 열어보기</div>
-    <!--페이지 왼쪽 상단 나가기 버튼-->
-    <button id="exit">
+    <div id="fortune-msg">포춘쿠키 열어보기</div>
+    <!-- 페이지 오른쪽 상단 나가기 버튼 -->
+    <button type="button" id="exit-btn">
       <img src="img/exit.png" />
     </button>
-    <!--스크립트-->
+    <!-- 스크립트 -->
     <script
       type="text/javascript"
       src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=5519e756431b8ae770b8d24e52a9c215&libraries=services"
     ></script>
-    <script
-      src="https://kit.fontawesome.com/13650dff62.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="js/exit.js"></script>
-    <script src="js/google.js"></script>
-    <script src="js/profile.js"></script>
-    <script src="js/background.js"></script>
-    <script src="js/fortune.js"></script>
     <script src="js/clock.js"></script>
     <script src="js/weather-map.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/youtube.js"></script>
     <script src="js/todo.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/fortune.js"></script>
+    <script src="js/exit.js"></script>
   </body>
 </html>

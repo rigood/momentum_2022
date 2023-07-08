@@ -1,48 +1,54 @@
-const colors = [
-  "#ef5777",
-  "#575fcf",
-  "#4bcffa",
-  "#34e7e4",
-  "#0be881",
-  "#f53b57",
-  "#3c40c6",
-  "#0fbcf9",
-  "#00d8d6",
-  "#05c46b",
-  "#ffc048",
-  "#ffdd59",
-  "#ff5e57",
-  "#d2dae2",
-  "#485460",
-  "#ffa801",
-  "#ffd32a",
-  "#ff3f34",
+const colorPalettes = [
+  ["#70e1f5", "#ffd194"],
+  ["#FFDEE9", "#B5FFFC"],
+  ["#2BC0E4", "#EAECC6"],
+  ["#74EBD5", "#9FACE6"],
+  ["#F8CDDA", "#1D2B64"],
+  ["#E5E5BE", "#003973"],
+  ["#ff6e7f", "#bfe9ff"],
 ];
 
-const bgColor = document.querySelector("#bg-colorBtn");
-const bgCloud = document.querySelector("#bg-cloudBtn");
+const BACKGROUND_KEY = "background";
 
-function changeBgColor() {
-  const a = colors[Math.floor(Math.random() * colors.length)];
-  const b = colors[Math.floor(Math.random() * colors.length)];
-  if (a === b) {
-    return handleClick();
+const savedBgColors = localStorage.getItem(BACKGROUND_KEY);
+const parsedBgColors = savedBgColors && JSON.parse(savedBgColors);
+let currentBgStartColor = parsedBgColors && parsedBgColors[0];
+
+const randomBgBtn = document.getElementById("random-bg-btn");
+const cloudBgBtn = document.getElementById("cloud-bg-btn");
+
+function generateBgColors() {
+  return colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+}
+
+function setGradientBackground(color1, color2) {
+  document.body.style.background = `linear-gradient(${color1}, ${color2})`;
+}
+
+function setRandomBackground() {
+  let newBgColors = generateBgColors();
+
+  while (currentBgStartColor === newBgColors[0]) {
+    newBgColors = generateBgColors();
   }
-  bgColor.style.background = a;
-  bgColor.style.color = "white";
-  bgCloud.style.background = "white";
-  bgCloud.style.color = "black";
-  document.body.style.background = `linear-gradient(${a}, ${b})`;
+
+  setGradientBackground(newBgColors[0], newBgColors[1]);
+  currentBgStartColor = newBgColors[0];
+
+  localStorage.setItem(BACKGROUND_KEY, JSON.stringify(newBgColors));
 }
 
-function changeBgCloud() {
-  bgColor.style.background = "white";
-  bgColor.style.color = "black";
-  bgCloud.style.background = "#1c7ab7";
-  bgCloud.style.color = "white";
-  document.body.style.background = "url('img/bg_cloud.jpg')";
+function setCloudBackground() {
+  document.body.style.background = "url('img/background.jpg')";
   document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundRepeat = "no-repeat";
+
+  localStorage.setItem(BACKGROUND_KEY, "");
 }
 
-bgColor.addEventListener("click", changeBgColor);
-bgCloud.addEventListener("click", changeBgCloud);
+randomBgBtn.addEventListener("click", setRandomBackground);
+cloudBgBtn.addEventListener("click", setCloudBackground);
+
+if (parsedBgColors) {
+  setGradientBackground(parsedBgColors[0], parsedBgColors[1]);
+}

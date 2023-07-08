@@ -1,4 +1,5 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+
 @font-face {
   font-family: "GmarketSansMedium";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
@@ -6,23 +7,18 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
-  font-family: "establishRetrosansOTF";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/establishRetrosansOTF.woff")
-    format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "DungGeunMo";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff")
+  font-family: "NeoDunggeunmo";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.3/NeoDunggeunmo.woff")
     format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
-.hidden {
-  display: none;
+:root {
+  --opaque: rgba(255, 255, 255, 0.3);
+  --outline: 5px solid gold;
 }
 
 * {
@@ -30,222 +26,243 @@
 }
 
 body {
-  width: 100%;
-  min-width: 1920px;
-  height: 100vh;
-  min-height: 1080px;
+  min-width: 1280px;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("img/bg_cloud.jpg");
+  background-image: url("img/background.jpg");
+  background-repeat: no-repeat;
   background-size: cover;
   font-family: "GmarketSansMedium";
+  font-size: 16px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  outline: none;
+}
+
+button:focus-visible {
+  outline: var(--outline);
 }
 
 input {
-  font-family: "GmarketSansMedium";
-  font-size: 15px;
   text-align: center;
+  background: var(--opaque);
+  border-radius: 20px;
+  padding: 10px;
+  padding-bottom: 9px;
+
+  &:focus {
+    background-color: white;
+    outline: var(--outline);
+
+    &::placeholder {
+      opacity: 0;
+    }
+  }
 }
 
-input:focus {
-  background-color: white !important;
-  border: none;
-  outline: 7px solid gold !important;
-}
-input:focus::placeholder {
-  color: transparent;
-}
-input::placeholder,
-input::-webkit-input-placeholder {
-  font-family: "GmarketSansMedium";
-  font-size: 15px;
-  text-align: center;
+.hidden {
+  display: none;
 }
 
-button {
-  font-family: "GmarketSansMedium";
+.app {
+  width: 70%;
+  margin: 64px auto;
+  position: relative;
+
+  @media screen and (max-width: 1919px) {
+    width: 90%;
+  }
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 40px 10px;
+  font-family: "NeoDunggeunmo";
+  font-size: 24px;
+
+  #weather {
+    img {
+      margin: 0 10px;
+      vertical-align: bottom;
+    }
+  }
 }
 
 main {
-  width: 70%;
-  height: 70%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  display: grid;
+  grid-template-areas:
+    "profile search todo"
+    "map youtube todo";
+  grid-template-columns: 1fr 2fr 1fr;
+  padding: 40px 20px;
+  background: var(--opaque);
+  backdrop-filter: blur(10px);
   border-radius: 20px;
   border-top-right-radius: 0px;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-  background-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
+  position: relative;
 
-  // Clock, Weather
-  header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    top: -35px;
-    padding: 0px 25px;
-    font-family: "DungGeunMo";
-    font-size: 25px;
-    div {
-      display: flex;
-      align-items: flex-end;
-      img {
-        margin: 0px 10px;
+  .profile {
+    grid-area: profile;
+  }
+
+  .map {
+    grid-area: map;
+  }
+
+  .search {
+    grid-area: search;
+  }
+
+  .youtube {
+    grid-area: youtube;
+  }
+
+  .todo {
+    grid-area: todo;
+  }
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+// 프로필 사진 + 닉네임
+.profile {
+  .profile-photo {
+    position: relative;
+
+    img {
+      width: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    label {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+
+      i {
+        background: var(--opaque);
+        border-radius: 50%;
+        padding: 10px;
+        cursor: pointer;
       }
     }
   }
 
-  // Contents
-  .wrap {
-    width: 97%;
-    height: 95%;
-    display: grid;
-    grid-template-columns: 0.9fr 2fr 1fr;
-    grid-template-rows: 3.8fr 6.2fr;
+  #profile-nickname-form,
+  #profile-nickname-display {
+    margin-top: 20px;
+  }
 
-    // 프로필 (사진, 닉네임)
-    section.profile {
-      grid-column: 1 / 2;
-      grid-row: 1 / 2;
+  #profile-nickname-form {
+    input {
+      width: 210px;
+    }
+  }
+}
+
+// 지도 검색
+.map {
+  #kakao-map {
+    width: 250px;
+    height: 250px;
+    border-radius: 20px;
+
+    .custom-overlay {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      .profile-thumbnail {
-        width: 120px;
-        height: 120px;
+      align-items: flex-start;
+      background-color: white;
+      border: 1px solid gray;
+      padding: 15px 10px 10px;
+
+      .text-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        .place-name {
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .goto-kakaomap {
+          font-size: 10px;
+          color: gray;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      button {
+        margin-left: 10px;
+        padding: 0;
+        background: none;
+        font-size: 14px;
+        cursor: pointer;
         position: relative;
-        margin-bottom: 10px;
-        img {
-          width: 120px;
-          height: 120px;
-          border-radius: 50%;
-        }
-        input {
-          display: none;
-        }
-        i {
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          padding: 10px;
-          border-radius: 50%;
-          background-color: rgba(255, 255, 255, 0.5);
-          font-size: 13px;
-          cursor: pointer;
-        }
-      }
-      #nickname-form {
-        width: 120px;
-        input#nickname-input {
-          width: inherit;
-          padding: 10px;
-          padding-bottom: 5px;
-          border: none;
-          background-color: rgba(255, 255, 255, 0.3);
-          border-radius: 20px;
-        }
-        input#nickname-input:focus {
-          outline: none;
-        }
-        ::placeholder {
-          font-family: "GmarketSansMedium";
-
-          text-align: center;
-        }
-      }
-      h1#nickname-display {
-        margin-top: 15px;
+        top: -5px;
       }
     }
-    // 지도 (현재 위치, 키워드 검색)
-    section.searchmap {
-      grid-column: 1 / 2;
-      grid-row: 2 / -1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      #map {
-        width: 250px;
-        height: 250px;
-        border-radius: 20px;
-        background-color: rgba(255, 255, 255, 0.5);
-      }
-      #searchmap-form {
-        margin-top: 20px;
-        input[type="text"] {
-          width: 220px;
-          padding: 10px;
-          padding-bottom: 5px;
-          border: none;
-          background-color: rgba(255, 255, 255, 0.3);
-          border-radius: 20px;
-        }
-        input[type="text"]:focus {
-          outline: none;
-        }
-        ::placeholder {
-          font-family: "GmarketSansMedium";
+  }
 
-          text-align: center;
-        }
-      }
+  #map-search-form {
+    margin-top: 20px;
+
+    input {
+      width: 250px;
     }
-    section.google {
+  }
+}
+
+// 구글 검색
+.search {
+  .search-form {
+    width: 60%;
+
+    &:first-child {
+      margin-bottom: 15px;
+    }
+
+    input {
       width: 100%;
-      height: 100%;
-      grid-column: 2 / 3;
-      grid-row: 1 / 2;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      #google-form {
-        width: 80%;
-        height: 30%;
-        input[type="text"] {
-          width: 100%;
-          height: 100%;
-          padding: 30px;
-          border: none;
-          border-radius: 20px;
-          background-color: rgba(255, 255, 255, 0.3);
-          font-size: 20px;
-        }
-        input[type="text"]:focus {
-          outline: none;
-        }
-        ::placeholder {
-          font-family: "GmarketSansMedium";
-
-          font-size: 20px;
-          text-align: center;
-        }
-      }
+      padding: 15px;
+      padding-bottom: 14px;
     }
-    section.youtube {
+  }
+}
+
+// 유튜브
+.youtube {
+  .youtube-container {
+    width: 80%;
+    #youtube-iframe-wrapper {
+      position: relative;
       width: 100%;
-      height: 85%;
-      grid-column: 2 / 3;
-      grid-row: 2 / -1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      .youtube-box {
-        position: relative;
-        width: 80%;
-        padding-bottom: 56.25%;
-        height: 0;
-      }
-      .youtube-box iframe,
-      .youtube-box object,
-      .youtube-box embed {
+      height: 0;
+      padding-bottom: 56.25%;
+      iframe {
         position: absolute;
         top: 0;
         left: 0;
@@ -253,115 +270,139 @@ main {
         height: 100%;
       }
     }
-    section.todo {
+    #youtube-url-form {
       width: 100%;
-      height: 100%;
-      grid-column: 3 / -1;
-      grid-row: 1 / -1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      #todo-form {
-        width: 90%;
-        height: 50px;
-        margin-top: 20px;
-        input[type="text"] {
-          width: 100%;
-          height: 100%;
-          border: none;
-          border-radius: 20px;
-          background-color: rgba(255, 255, 255, 0.3);
-          font-size: 15px;
-        }
-        input[type="text"]:focus {
-          outline: none;
-        }
-        ::placeholder {
-          font-family: "GmarketSansMedium";
-          font-size: 15px;
-          text-align: center;
-        }
-      }
-      ul#todo-list {
-        width: 90%;
-        height: 80%;
-        padding: 7% 5%;
-        overflow-y: auto;
-        border-radius: 20px;
-        background-color: rgba(255, 255, 255, 0.3);
-        li {
-          height: 50px;
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 15px;
-          padding: 18px;
-          border-radius: 20px;
-          background-color: rgba(255, 255, 255, 0.5);
-          font-size: 14px;
-          cursor: pointer;
-        }
-      }
-      ::-webkit-scrollbar {
-        display: none;
+      margin-top: 20px;
+      input {
+        width: 100%;
+        padding: 15px;
+        padding-bottom: 14px;
       }
     }
   }
+}
 
-  // Background Cange Btn
-  .background {
-    position: absolute;
-    top: 0px;
-    right: -38px;
+// 투두리스트
+.todo {
+  #todo-list {
+    width: 90%;
+    height: 500px;
+    overflow-y: auto;
+    padding: 5%;
+    background: var(--opaque);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      background: var(--opaque);
+      border-radius: 20px;
+      font-size: 14px;
+      color: #333;
+      cursor: move;
+
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      .todo-text {
+        flex: 1;
+        margin: 0 10px;
+        text-decoration: none;
+        word-break: break-word;
+        position: relative;
+        top: 1px;
+      }
+
+      i {
+        cursor: pointer;
+      }
+
+      &.checked {
+        color: #888;
+
+        .todo-text {
+          text-decoration: line-through;
+        }
+      }
+
+      &.dragging {
+        opacity: 0.5;
+        border: var(--outline);
+      }
+    }
+  }
+  #todo-form {
+    width: 90%;
+    margin-top: 20px;
+    input {
+      width: 100%;
+      padding: 15px;
+      padding-bottom: 14px;
+    }
+  }
+}
+
+.bg-btns {
+  position: absolute;
+  top: 0px;
+  right: -41px;
+  display: flex;
+  flex-direction: column;
+
+  span {
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+  }
+
+  .bg-btn {
+    letter-spacing: 5px;
     padding: 10px;
-    border: none;
+    background: var(--opaque);
+    backdrop-filter: blur(10px);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    background-color: white;
-    letter-spacing: 5px;
-    z-index: -1;
     cursor: pointer;
-    span {
-      writing-mode: vertical-lr;
-      text-orientation: upright;
-    }
-  }
-  #bg-cloudBtn {
-    top: 117.66px;
-    background-color: #1c7ab7;
-    color: white;
   }
 }
 
-#exit {
+#fortune-cookie {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: none;
+  cursor: pointer;
+
+  img {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+#fortune-msg {
+  position: fixed;
+  bottom: 32px;
+  right: 96px;
+  margin-left: 16px;
+  text-align: right;
+  line-height: 1.2;
+}
+
+#exit-btn {
   position: fixed;
   top: -13px;
-  right: 5%;
-  border: none;
+  right: 30px;
   background: none;
   cursor: pointer;
-}
 
-#fortune {
-  width: 100px;
-  height: 100px;
-  position: fixed;
-  bottom: 5%;
-  right: 5%;
-  border: none;
-  background: none;
-  cursor: pointer;
-  button:focus {
-    outline: none;
+  &:focus-within {
+    outline: var(--outline);
   }
-  img {
-    width: 100px;
-    height: 100px;
-  }
-}
-#openMsg {
-  position: fixed;
-  bottom: calc(5% + 20px);
-  right: calc(5% + 100px);
-  text-align: right;
 }
