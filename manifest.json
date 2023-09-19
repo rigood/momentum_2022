@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "rigood-momentum",
+  "description": "Customized Momentum App for rigood",
+  "version": "1.1",
+  "icons": {
+    "16": "img/favicon/16.png",
+    "48": "img/favicon/48.png",
+    "128": "img/favicon/128.png"
+  },
+  "action": {
+    "default_title": "Momentum for rigood",
+    "default_icon": "img/favicon/16.png",
+    "default-popup": "index.html"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  }
+}
